@@ -1,0 +1,73 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" 
+        style="border:1px solid #c3c3c3;">
+        Your browser does not support the canvas element.
+    </canvas>
+    <script>
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        // Set display size (css pixels).
+        var size = 200;
+        canvas.style.width = size + "px";
+        canvas.style.height = size + "px";
+
+        // Set actual size in memory (scaled to account for extra pixel density).
+        var scale = window.devicePixelRatio; // <--- Change to 1 on retina screens to see blurry canvas.
+        canvas.width = size * scale;
+        canvas.height = size * scale;
+
+        // Normalize coordinate system to use css pixels.
+        ctx.scale(scale, scale);
+        let dx = 0;
+        window.requestAnimationFrame(draw);
+        function draw() {
+            if(dx < 160){
+                dx += 1;
+            }
+                
+            ctx = document.getElementById("canvas").getContext("2d")
+            //ctx.globalCompositeOperation = 'destination-over';
+            ctx.clearRect(0, 0, 200, 100); // clear canvas
+            ctx.save()
+            grid(ctx)
+            circle(ctx,20, 50, 10, 0, 2*Math.PI, dx, 0, "red")
+            ctx.restore()
+            window.requestAnimationFrame(draw);
+            }
+        
+        function line(ctx, x1, y1, x2, y2, c, w){
+            ctx.save()
+            ctx.strokeStyle = c;
+            ctx.lineWidth = w;
+            ctx.moveTo(x1+.5, y1+.5);
+            ctx.lineTo(x2+.5, y2+.5);
+            ctx.stroke()
+            ctx.restore()
+        }
+        function circle(ctx, x, y, r, a, b, xs, ys, c){
+            ctx.save()
+            ctx.beginPath();
+            ctx.translate(xs, ys)
+            ctx.arc(x, y, r, a+.5, b+.5);
+            ctx.strokeStyle = c;
+            ctx.stroke();
+            ctx.restore()
+        }
+        function grid(ctx){
+            for(let i=0; i < 200; i+=10){
+                line(ctx, i, 0, i, 100, "#C0C0C0", 1)  
+            }
+            for(let j=0; j<100; j+= 10){
+                line(ctx, 0, j, 200, j, "#C0C0C0", 1)  
+        }            
+        }
+    </script>
+</body>
+</html>
